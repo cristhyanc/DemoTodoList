@@ -109,7 +109,30 @@ namespace DemoTodoList.Core.ViewModels.Home
 
         private async Task DeleteTodoList(Guid todoListId)
         {
-
+            try
+            {
+                if (await this._userDialogs.ConfirmAsync("Do you want to delete this list?", "", "Yes", "No"))
+                {
+                    this.IsBusy = true;
+                   
+                    if(await  this._todoListUseCase.DeleteTodoList(todoListId))
+                    {
+                        await this.GetTodoLists();
+                    }
+                    else
+                    {
+                        await this._userDialogs.AlertAsync("The list could not be deleted, try again");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ProcessException(ex, this._userDialogs);
+            }
+            finally
+            {
+                this.IsBusy = false;
+            }
         }
 
         private async Task GetTodoLists()

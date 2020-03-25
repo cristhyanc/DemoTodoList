@@ -69,6 +69,7 @@ namespace DemoTodoList.UserCases.TodoListUseCases
             newActiveList.IsActive = true;
             return await newActiveList.Save(uow.TodoListRepository);
         }
+
         public async Task<IEnumerable<TodoItem>> GetTodoItems(Guid todolistId)
         {
             IEnumerable<TodoItem> result = new List<TodoItem>();
@@ -78,6 +79,33 @@ namespace DemoTodoList.UserCases.TodoListUseCases
                 result = todoItems.Select(x => x.ConverToDto());
             }
             return result;
-        }       
+        }
+
+        public async Task<bool> DeleteTodoList(Guid todolistId)
+        {
+
+            var item = await uow.TodoListRepository.Get(todolistId).ConfigureAwait(false);
+
+            if (item == null)
+            {
+                throw new ArgumentException("Todo List could not be found");
+            }
+
+            if (await item.Delete(uow.TodoListRepository, uow.TodoItemRepository))
+            {
+                if(item.IsActive )
+                {
+                    item = (await uow.TodoListRepository.GetAll().ConfigureAwait(false)).FirstOrDefault();
+                    if (item != null)
+                    {
+                        return await this.SetNewMainTodoList(item.ListId);
+                    }
+                }
+               
+                return true;
+            }
+
+            return false;
+        }
     }
 }

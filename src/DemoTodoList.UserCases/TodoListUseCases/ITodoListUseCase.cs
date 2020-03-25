@@ -12,6 +12,6 @@ namespace DemoTodoList.UserCases.TodoListUseCases
         Task<TodoList> CreateTodoList(string title);
         Task<bool> SetNewMainTodoList(Guid todolistId);
         Task<IEnumerable<TodoItem>> GetTodoItems(Guid todolistId);
-        
+        Task<bool> DeleteTodoList(Guid todolistId);
     }
 }
