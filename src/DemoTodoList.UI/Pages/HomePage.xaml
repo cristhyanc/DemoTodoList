@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:MvxContentPage
+    x:Class="DemoTodoList.UI.Pages.HomePage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:Helpers="clr-namespace:DemoTodoList.UI.Resources"
+    xmlns:local="clr-namespace:DemoTodoList.UI.Pages"
+    xmlns:mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
+    xmlns:viewModels="clr-namespace:DemoTodoList.Core.ViewModels.Home;assembly=DemoTodoList.Core"
+    xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+    x:Name="page"
+    Title="Welcome"
+    x:TypeArguments="viewModels:HomeViewModel">
+
+    <views:MvxContentPage.Content>
+        <StackLayout>
+
+            <ListView
+                Margin="0,10,0,0"
+                CachingStrategy="RecycleElement"
+                HasUnevenRows="True"
+                IsPullToRefreshEnabled="True"
+                IsRefreshing="{Binding IsBusy, Mode=TwoWay}"
+                ItemsSource="{Binding TodoLists}"
+                RefreshCommand="{Binding RefreshTodoListCommand}"
+                SelectedItem="{Binding SelectedTodoLists, Mode=TwoWay}"
+                SelectionMode="Single"
+                SeparatorVisibility="None">
+                <ListView.Header>
+                    <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                        <Button Command="{Binding AddNewListCommand}" Text="Add" />
+                        <Label
+                            Margin="0,0,0,10"
+                            HorizontalOptions="CenterAndExpand"
+                            Text="Todo List" />
+                    </StackLayout>
+                </ListView.Header>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.ContextActions>
+                                <MenuItem
+                                    Command="{Binding Source={x:Reference page}, Path=BindingContext.DataContext.MakeMainListCommand}"
+                                    CommandParameter="{Binding ListId}"
+                                    Text="Make Main List" />
+                                <MenuItem
+                                    Command="{Binding Source={x:Reference page}, Path=BindingContext.DataContext.DeleteCommand}"
+                                    CommandParameter="{Binding ListId}"
+                                    IsDestructive="true"
+                                    Text="Delete" />
+                            </ViewCell.ContextActions>
+
+                            <StackLayout Margin="5" BackgroundColor="White">
+
+                                <StackLayout Margin="10" Orientation="Horizontal">
+                                    <Label Margin="0,0,5,0" Text="Title:" />
+                                    <Label Text="{Binding Title}" />
+
+                                </StackLayout>
+                                <BoxView
+                                    Margin="0,0,0,5"
+                                    BackgroundColor="Blue"
+                                    HeightRequest="1"
+                                    HorizontalOptions="FillAndExpand"
+                                    IsVisible="{Binding IsActive}"
+                                    VerticalOptions="End" />
+
+
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+
+
+        </StackLayout>
+    </views:MvxContentPage.Content>
+</views:MvxContentPage>

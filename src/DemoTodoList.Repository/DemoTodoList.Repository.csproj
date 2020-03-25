@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="sqlite-net-pcl" Version="1.6.292" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DemoTodoList.Entities\DemoTodoList.Entities.csproj" />
+    <ProjectReference Include="..\DemoTodoList.Shared\DemoTodoList.Shared.csproj" />
+    <ProjectReference Include="..\DemoTodoList.UserCases\DemoTodoList.UserCases.csproj" />
+  </ItemGroup>
+
+</Project>

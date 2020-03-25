@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:MvxContentPage
+    x:Class="DemoTodoList.UI.Pages.TodoListPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:Helpers="clr-namespace:DemoTodoList.UI.Resources"
+    xmlns:local="clr-namespace:DemoTodoList.UI.Pages"
+    xmlns:mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
+    xmlns:viewModels="clr-namespace:DemoTodoList.Core.ViewModels.Home;assembly=DemoTodoList.Core"
+    xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+    x:Name="page"
+    Title="{Binding TodoList.Title}"
+    x:TypeArguments="viewModels:TodoListViewModel">
+
+    <views:MvxContentPage.Resources>
+        <Helpers:CompletedTodoColorConverterr x:Key="colorConverter" />
+    </views:MvxContentPage.Resources>
+
+    <views:MvxContentPage.Content>
+        <StackLayout>
+
+            <ListView
+                Margin="0,10,0,0"
+                CachingStrategy="RecycleElement"
+                HasUnevenRows="True"
+                IsPullToRefreshEnabled="True"
+                IsRefreshing="{Binding IsBusy, Mode=TwoWay}"
+                ItemsSource="{Binding TodoItems}"
+                RefreshCommand="{Binding RefreshTodoItemCommand}"
+                SelectionMode="None"
+                SeparatorVisibility="None">
+                <ListView.Header>
+                    <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                        <Button
+                            Command="{Binding AddNewItemCommand}"
+                            HorizontalOptions="Start"
+                            IsVisible="{Binding TodoList.IsActive}"
+                            Text="Add" />
+                        <Label
+                            Margin="0,0,0,10"
+                            HorizontalOptions="CenterAndExpand"
+                            Text="Todos"
+                            VerticalOptions="Center" />
+                    </StackLayout>
+                </ListView.Header>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.ContextActions>
+                                <MenuItem
+                                    Command="{Binding Source={x:Reference page}, Path=BindingContext.DataContext.MarkAsCompleteCommand}"
+                                    CommandParameter="{Binding TodoId}"
+                                    IsEnabled="{Binding IsActive, Converter={Helpers:InverseBoolConverter}}"
+                                    Text="Complete" />
+                                <MenuItem
+                                    Command="{Binding Source={x:Reference page}, Path=BindingContext.DataContext.DeleteCommand}"
+                                    CommandParameter="{Binding TodoId}"
+                                    IsDestructive="true"
+                                    Text="Delete" />
+                            </ViewCell.ContextActions>
+
+                            <StackLayout Margin="5" BackgroundColor="{Binding IsCompleted, Converter={StaticResource colorConverter}}">
+
+                                <StackLayout Margin="10" Orientation="Horizontal">
+                                    <Label Margin="0,0,5,0" Text="Title:" />
+                                    <Label Text="{Binding Title}" />
+                                </StackLayout>
+                                <StackLayout Margin="10" Orientation="Horizontal">
+                                    <Label Margin="0,0,5,0" Text="Description:" />
+                                    <Label Text="{Binding Description}" />
+                                </StackLayout>
+                                <BoxView
+                                    Margin="0,0,0,5"
+                                    BackgroundColor="Blue"
+                                    HeightRequest="1"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="End" />
+
+
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+
+
+        </StackLayout>
+    </views:MvxContentPage.Content>
+</views:MvxContentPage>
