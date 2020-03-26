@@ -46,6 +46,21 @@ namespace DemoTodoList.UserCases.TodoListUseCases
 
             return null;
         }
+
+        public async Task<bool > EditTodoList(TodoList todoList)
+        {
+            var todoListEntity = await uow.TodoListRepository.Get(todoList.ListId).ConfigureAwait(false);
+
+            if(todoListEntity==null)
+            {
+                throw new ArgumentException("Todo List could not be found");
+            }
+
+            todoListEntity.Title = todoList.Title;
+
+            return await  todoListEntity.Save(uow.TodoListRepository).ConfigureAwait(false);
+        }
+
         public async Task<bool> SetNewMainTodoList(Guid todolistId)
         {
             var mainTodoLists = await uow.TodoListRepository.GetAll(x => x.IsActive).ConfigureAwait(false);

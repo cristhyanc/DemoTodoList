@@ -50,11 +50,13 @@
                                 <MenuItem
                                     Command="{Binding Source={x:Reference page}, Path=BindingContext.DataContext.MarkAsCompleteCommand}"
                                     CommandParameter="{Binding TodoId}"
+                                    IconImageSource="complete.png"
                                     IsEnabled="{Binding IsActive, Converter={Helpers:InverseBoolConverter}}"
                                     Text="Complete" />
                                 <MenuItem
                                     Command="{Binding Source={x:Reference page}, Path=BindingContext.DataContext.DeleteCommand}"
                                     CommandParameter="{Binding TodoId}"
+                                    IconImageSource="delete.png"
                                     IsDestructive="true"
                                     Text="Delete" />
                             </ViewCell.ContextActions>

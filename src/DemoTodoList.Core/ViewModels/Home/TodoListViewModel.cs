@@ -117,7 +117,8 @@ namespace DemoTodoList.Core.ViewModels.Home
 
                 if (result)
                 {
-                  await  GetTodoItems();
+                    this._userDialogs.Toast("Done!!");
+                    await  GetTodoItems();
                 }
             }
             catch (Exception ex)
@@ -176,6 +177,7 @@ namespace DemoTodoList.Core.ViewModels.Home
                         }
                         else
                         {
+                            this._userDialogs.Toast("Done!!");
                             this.TodoItems.Add(result);
                         }
                     }    

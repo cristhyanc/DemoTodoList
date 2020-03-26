@@ -22,7 +22,9 @@ namespace DemoTodoList.Core.ViewModels.Home
 
         public IMvxCommand RefreshTodoListCommand { get; private set; }
         public IMvxAsyncCommand<Guid> MakeMainListCommand { get; set; }
-        public IMvxAsyncCommand AddNewListCommand { get; set; }        
+        public IMvxAsyncCommand AddNewListCommand { get; set; }
+        public IMvxAsyncCommand<TodoList> EditCommand => new MvxAsyncCommand<TodoList>(EditList);
+
         public IMvxAsyncCommand<Guid> DeleteCommand => new MvxAsyncCommand<Guid>(DeleteTodoList);
 
         private ObservableCollection<TodoList> _todoLists;
@@ -76,6 +78,32 @@ namespace DemoTodoList.Core.ViewModels.Home
         }
 
      
+        private async Task EditList(TodoList todoList)
+        {
+            try
+            {
+                PromptConfig PromptConfig = new PromptConfig { Message = "Please enter the new title", Title = "Editing", OkText = "Save", InputType = InputType.Default, Text = todoList.Title };
+                PromptResult promptResult = await this._userDialogs.PromptAsync(PromptConfig).ConfigureAwait(false);
+                if(promptResult.Ok)
+                {
+                    todoList.Title = promptResult.Value;
+                    if (await this._todoListUseCase.EditTodoList(todoList))
+                    {
+                        this._userDialogs.Toast("Done!!");
+                        this.TodoLists.Remove(todoList);
+                        this.TodoLists.Add(todoList);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ProcessException(ex, this._userDialogs);
+            }
+            finally
+            {
+                this.IsBusy = false;              
+            }
+        }
 
         private async Task MakeMainList(Guid todoListId)
         {
@@ -86,8 +114,7 @@ namespace DemoTodoList.Core.ViewModels.Home
                     this.IsBusy = true;
                     if(await this._todoListUseCase.SetNewMainTodoList(todoListId))
                     {
-                        await this._userDialogs.AlertAsync("Done");
-                        
+                        this._userDialogs.Toast("Done!!");
                     }
                     else
                     {
@@ -118,6 +145,7 @@ namespace DemoTodoList.Core.ViewModels.Home
                     if(await  this._todoListUseCase.DeleteTodoList(todoListId))
                     {
                         await this.GetTodoLists();
+                        this._userDialogs.Toast("Done!!");
                     }
                     else
                     {
@@ -161,7 +189,6 @@ namespace DemoTodoList.Core.ViewModels.Home
             }
         }
 
-
         private async Task CreateNewTodoList()
         {
             try
@@ -179,6 +206,7 @@ namespace DemoTodoList.Core.ViewModels.Home
                     }else
                     {
                         this.TodoLists.Add(result);
+                        this._userDialogs.Toast("Done!!");
                     }
                 }
             }

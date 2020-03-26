@@ -40,12 +40,21 @@
                         <ViewCell>
                             <ViewCell.ContextActions>
                                 <MenuItem
+                                    Command="{Binding Source={x:Reference page}, Path=BindingContext.DataContext.EditCommand}"
+                                    CommandParameter="{Binding}"
+                                    IconImageSource="edit.png"
+                                    IsDestructive="False"
+                                    Text="Edit" />
+                                <MenuItem
                                     Command="{Binding Source={x:Reference page}, Path=BindingContext.DataContext.MakeMainListCommand}"
                                     CommandParameter="{Binding ListId}"
+                                    IconImageSource="favorite.png"
+                                    IsDestructive="False"
                                     Text="Make Main List" />
                                 <MenuItem
                                     Command="{Binding Source={x:Reference page}, Path=BindingContext.DataContext.DeleteCommand}"
                                     CommandParameter="{Binding ListId}"
+                                    IconImageSource="delete.png"
                                     IsDestructive="true"
                                     Text="Delete" />
                             </ViewCell.ContextActions>
