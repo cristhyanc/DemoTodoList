@@ -18,7 +18,7 @@ namespace DemoTodoList.UserCases.TodoItemUserCases
 
         public async Task<TodoItem> CreateTodoItem(string title, string description, Guid todoListId)
         {
-            var list = uow.TodoListRepository.Get(todoListId);
+            var list = await uow.TodoListRepository.Get(todoListId);
             if (list == null)
             {
                 throw new ArgumentException("The todo list does not exist");
